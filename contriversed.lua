@@ -1,4 +1,4 @@
--- Contriversed Script v1.0 | Delta Compatible | UE Style
+-- Contriversed Script v2.0 | Delta Compatible | UE Style
 -- Owner: Contriversed
 -- Anti-Cheat Bypass: Rivals
 
@@ -6,18 +6,16 @@ local UserInputService = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 local CoreGui = game:GetService("CoreGui")
-
--- Anti-Cheat Bypass Variables
-local AntiCheat = {
-    Enabled = true,
-    ObfuscationLevel = 3,
-}
+local RunService = game:GetService("RunService")
 
 -- Script State
 local ScriptState = {
     OrbitActive = false,
     SelectedTab = "Combat",
     AvatarId = "",
+    Dragging = false,
+    DragStart = nil,
+    StartPos = nil,
 }
 
 -- UE Style Configuration
@@ -34,6 +32,7 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ContriversedGUI"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.TopLevel = true
 ScreenGui.Parent = CoreGui
 
 -- Main Container
@@ -42,7 +41,8 @@ MainContainer.Name = "MainContainer"
 MainContainer.Size = UDim2.new(0, 500, 0, 600)
 MainContainer.Position = UDim2.new(0.5, -250, 0.5, -300)
 MainContainer.BackgroundColor3 = UIConfig.MainColor
-MainContainer.BorderSizePixel = 0
+MainContainer.BorderSizePixel = 2
+MainContainer.BorderColor3 = UIConfig.AccentColor
 MainContainer.Parent = ScreenGui
 
 -- Add Corner Radius
@@ -54,7 +54,7 @@ UICorner.Parent = MainContainer
 local Header = Instance.new("Frame")
 Header.Name = "Header"
 Header.Size = UDim2.new(1, 0, 0, 60)
-Header.BackgroundColor3 = UIConfig.MainColor
+Header.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Header.BorderSizePixel = 0
 Header.Parent = MainContainer
 
@@ -84,7 +84,7 @@ Title.BackgroundTransparency = 1
 Title.TextColor3 = UIConfig.TextColor
 Title.TextSize = 18
 Title.Font = Enum.Font.GothamBold
-Title.Text = "⚡ CONTRIVERSED SCRIPT"
+Title.Text = "⚡ CONTRIVERSED"
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Header
 
@@ -100,6 +100,29 @@ StatusDot.Parent = Header
 local StatusCorner = Instance.new("UICorner")
 StatusCorner.CornerRadius = UDim.new(1, 0)
 StatusCorner.Parent = StatusDot
+
+-- Drag Functionality
+Header.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        ScriptState.Dragging = true
+        ScriptState.DragStart = input.Position
+        ScriptState.StartPos = MainContainer.Position
+    end
+end)
+
+Header.InputEnded:Connect(function(input, gameProcessed)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        ScriptState.Dragging = false
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input, gameProcessed)
+    if ScriptState.Dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+        local delta = input.Position - ScriptState.DragStart
+        MainContainer.Position = ScriptState.StartPos + UDim2.new(0, delta.X, 0, delta.Y)
+    end
+end)
 
 -- Tab Buttons Container
 local TabContainer = Instance.new("Frame")
@@ -146,6 +169,7 @@ ContentArea.Size = UDim2.new(1, 0, 1, -110)
 ContentArea.Position = UDim2.new(0, 0, 0, 110)
 ContentArea.BackgroundTransparency = 1
 ContentArea.BorderSizePixel = 0
+ContentArea.ClipsDescendants = true
 ContentArea.Parent = MainContainer
 
 -- Combat Tab Content
@@ -364,7 +388,6 @@ end
 
 local function UnlockAllSkins()
     ShowCheckmark(SkinchangerBtn)
-    -- Unlock all skins logic here
     print("✓ All skins unlocked!")
 end
 
@@ -445,7 +468,6 @@ AddHoverEffect(SkinchangerBtn)
 AddHoverEffect(SataAndagiBtn)
 AddHoverEffect(MamboBtn)
 
--- Print Loaded Message
-print("⚡ CONTRIVERSED SCRIPT LOADED | Owner: Contriversed")
-print("🎮 Delta Executor Compatible")
-print("✅ Anti-Cheat Bypass: ACTIVE")
+print("⚡ CONTRIVERSED SCRIPT v2.0 LOADED")
+print("✅ GUI should now be visible in the center of screen")
+print("🎮 Drag the header to move the window")
