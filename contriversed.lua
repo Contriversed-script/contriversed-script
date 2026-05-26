@@ -347,7 +347,7 @@ local MamboBtn = Instance.new("TextButton")
 MamboBtn.Name = "Mambo"
 MamboBtn.Size = UDim2.new(1, -30, 0, 40)
 MamboBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-MamboBtn.TextColor3 = UIConfig.TextColor
+MamboBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 MamboBtn.TextSize = 12
 MamboBtn.Font = Enum.Font.Gotham
 MamboBtn.Text = "🎵 MAMBO KILL SOUND"
@@ -468,6 +468,5 @@ AddHoverEffect(SkinchangerBtn)
 AddHoverEffect(SataAndagiBtn)
 AddHoverEffect(MamboBtn)
 
-print("⚡ CONTRIVERSED SCRIPT v2.0 LOADED")
-print("✅ GUI should now be visible in the center of screen")
-print("🎮 Drag the header to move the window")
+print("⚡ CONTRIVERSED SCRIPT LOADED!")
+print("✅ Owner: Contriversed")
